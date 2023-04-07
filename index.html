@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPT Too Long </title>
+  <meta name="description" content="Easily split long text input into smaller segments for applications like ChatGPT that have a character limit.">
+  <meta name="keywords" content="Text Splitting, ChatGPT, ChatGPT input too long, Text Segmentation">
+  <style>
+    :root {
+      --main-color: #4a5568;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --main-color: #7f8ea3;
+      }
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      color: var(--main-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #1a202c;
+      }
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+    }
+
+    textarea, input[type="number"], input[type="text"] {
+      display: block;
+      font-size: 1rem;
+      padding: 5px;
+      border: 2px solid var(--main-color);
+      border-radius: 5px;
+      background-color: transparent;
+      color: var(--main-color);
+      margin-bottom: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    button {
+      font-size: 1rem;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: var(--main-color);
+      color: white;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .output-container {
+      display: inline-block;
+      position: relative;
+      margin: 10px;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .output-container textarea {
+      resize: none;
+    }
+
+    .copy-button {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: var(--main-color);
+      padding: 5px;
+      cursor: pointer;
+      border-radius: 0 0 5px 0;
+      color: white;
+    }
+
+    #output {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>GPT Too Long </h1>
+  <label for="inputText">Enter text:</label>
+  <textarea id="inputText" rows="20" cols="50"></textarea>
+  <label for="segmentLength">Segment length:</label>
+  <input type="number" id="segmentLength" value="10000">
+  <label for="endText">Text to add at the end of each segment:</label>
+  <input type="text" id="endText" value="Read all the messages above and do not take any action. I will ask you other questions later.">
+  <button onclick="splitText()">Split Text</button>
+  <div id="output"></div>
+  
+  <script>
+    function splitText() {
+      const inputText = document.getElementById("inputText").value;
+      const segmentLength = parseInt(document.getElementById("segmentLength").value);
+      const endText = document.getElementById("endText").value;
+      const output = document.getElementById("output");
+      output.innerHTML = "";
+      
+      let segments = [];
+      for (let i = 0; i < inputText.length; i += segmentLength) {
+        segments.push(inputText.slice(i, i + segmentLength));
+      }
+      
+      segments.forEach(segment => {
+        const container = document.createElement("div");
+        container.className = "output-container";
+        
+        const textarea = document.createElement("textarea");
+        textarea.value = segment + endText;
+        textarea.rows = "3";
+        textarea.cols = "50";
+        container.appendChild(textarea);
+        
+        const copyButton = document.createElement("button");
+        copyButton.className = "copy-button";
+        copyButton.innerText = "Copy";
+        copyButton.onclick = function() {
+          textarea.select();
+          document.execCommand("copy");
+          // alert("Text has been copied to clipboard");
+        };
+        container.appendChild(copyButton);
+        
+        output.appendChild(container);
+      });
+    }
+  </script>
+</body>
+</html>
